@@ -291,8 +291,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
  
-<!-- SWITCH -->
-<div class="switch-wrap">
+<!-- SWITCH — bottom left, no overlap -->
+<div id="switch-outer" style="position:fixed;bottom:calc(var(--tab-h) + 14px + env(safe-area-inset-bottom));left:16px;z-index:150;">
   <button class="switch-btn" onclick="switchView()">
     <span id="switch-icon">🩺</span>
     <span id="switch-label">Panel médico</span>
@@ -508,15 +508,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <input class="login-input" type="password" placeholder="••••••••" id="login-pass" onkeydown="if(event.key==='Enter') doLogin()">
       <button class="btn-login" id="btn-login" onclick="doLogin()">Ingresar al panel →</button>
       <p class="login-error" id="login-error">Usuario o contraseña incorrectos.</p>
-      <p class="login-hint">Demo: <strong>dr.gonzalez</strong> · <strong>cemij2025</strong></p>
+      <!-- credenciales removidas para produccion -->
     </div>
   </div>
  
   <div id="panel-inner" style="display:none">
     <div class="panel-header">
       <div class="panel-logo">Agendado.</div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <span style="font-size:12px;color:var(--text-mid)">Dr. González Gómez</span>
+        <button onclick="switchView()" style="font-size:11px;font-weight:600;color:var(--blue);background:var(--blue-pale);border:1px solid rgba(26,79,138,.15);padding:5px 12px;border-radius:20px;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;">👤 Vista paciente</button>
         <button class="btn-logout" onclick="doLogout()">Salir</button>
       </div>
     </div>
@@ -532,11 +533,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
     </div>
  
     <div id="ptab-agenda" class="panel-section active">
-      <div class="day-nav">
-        <button class="day-nav-btn" onclick="changeDay(-1)">‹</button>
-        <span class="day-nav-label" id="panel-day-label"></span>
-        <button class="day-nav-btn" onclick="changeDay(1)">›</button>
+      <!-- Vista semanal -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-family:Lora,serif;font-size:16px;color:var(--text)" id="week-label"></span>
+        <div style="display:flex;gap:6px">
+          <button class="day-nav-btn" onclick="changeWeek(-1)">‹</button>
+          <button class="day-nav-btn" onclick="changeWeek(0)" style="font-size:10px;font-weight:700;padding:0 8px;border-radius:8px;width:auto">Hoy</button>
+          <button class="day-nav-btn" onclick="changeWeek(1)">›</button>
+        </div>
       </div>
+      <!-- Tabs de días -->
+      <div id="week-day-tabs" style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px;padding-bottom:2px"></div>
+      <!-- Lista de turnos del día -->
       <div id="agenda-list"></div>
     </div>
  
@@ -743,6 +751,8 @@ function switchView() {
   document.getElementById('view-doctor').classList.toggle('active', inDoctor);
   document.getElementById('switch-icon').textContent = inDoctor ? '👤' : '🩺';
   document.getElementById('switch-label').textContent = inDoctor ? 'Vista paciente' : 'Panel médico';
+  // Ocultar botón switch cuando está en el panel (tiene el botón integrado en el header)
+  document.getElementById('switch-outer').style.display = inDoctor ? 'none' : 'block';
 }
  
 // ══════════════════════════════════════
@@ -958,6 +968,8 @@ function doLogin() {
     document.getElementById('login-error').style.display = 'none';
     document.getElementById('panel-login').style.display = 'none';
     document.getElementById('panel-inner').style.display = 'block';
+    weekOffset = 0; activeDayOffset = 0;
+    renderWeekTabs();
     renderPanelDay();
     loadPacientes();
     loadPanelStats();
@@ -1000,15 +1012,69 @@ async function loadPanelStats() {
   } catch(e) { console.error(e); }
 }
  
+// ══ VISTA SEMANAL ══
+let weekOffset = 0;      // semanas desde hoy
+let activeDayOffset = 0; // día seleccionado dentro de la semana
+ 
+function getMondayOfWeek(offset) {
+  const d = new Date(today);
+  const dow = d.getDay() === 0 ? 7 : d.getDay();
+  d.setDate(d.getDate() - dow + 1 + offset * 7);
+  d.setHours(0,0,0,0);
+  return d;
+}
+ 
+function changeWeek(dir) {
+  if (dir === 0) { weekOffset = 0; activeDayOffset = 0; }
+  else weekOffset += dir;
+  renderWeekTabs();
+  renderPanelDay();
+}
+ 
+function renderWeekTabs() {
+  const monday = getMondayOfWeek(weekOffset);
+  const from = monday.toLocaleDateString('es-AR', { day:'numeric', month:'long' });
+  const fri = new Date(monday); fri.setDate(fri.getDate() + 4);
+  const to = fri.toLocaleDateString('es-AR', { day:'numeric', month:'long' });
+  document.getElementById('week-label').textContent = from + ' – ' + to;
+ 
+  const tabs = document.getElementById('week-day-tabs');
+  tabs.innerHTML = '';
+  const dayLabels = ['Lun','Mar','Mié','Jue','Vie'];
+  const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+ 
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(monday); d.setDate(d.getDate() + i);
+    const isToday = d.toDateString() === today.toDateString();
+    const isSelected = (weekOffset * 7 + i) === activeDayOffset || 
+                       (weekOffset === 0 && i === activeDayOffset);
+    const dayNum = d.getDate();
+    const isPast = d < todayMid;
+ 
+    const btn = document.createElement('button');
+    btn.style.cssText = `flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:10px;border:1.5px solid ${isSelected ? 'var(--blue)' : 'var(--border)'};background:${isSelected ? 'var(--blue)' : 'var(--white)'};cursor:pointer;transition:all .2s;min-width:52px;`;
+    btn.innerHTML = `<span style="font-size:10px;font-weight:700;letter-spacing:.5px;color:${isSelected ? 'white' : isPast ? 'var(--text-dim)' : 'var(--text-mid)'};">${dayLabels[i]}</span><span style="font-family:Lora,serif;font-size:18px;font-weight:600;color:${isSelected ? 'white' : isToday ? 'var(--blue)' : isPast ? 'var(--text-dim)' : 'var(--text)'}">${dayNum}</span>${isToday ? `<span style="width:4px;height:4px;border-radius:50%;background:${isSelected ? 'white' : 'var(--teal)'}"></span>` : ''}`;
+    
+    const dayOff = i;
+    btn.onclick = () => {
+      activeDayOffset = dayOff;
+      renderWeekTabs();
+      renderPanelDay();
+    };
+    tabs.appendChild(btn);
+  }
+}
+ 
+// Keep legacy changeDay for compatibility
 let panelDayOffset = 0;
-function changeDay(dir) { panelDayOffset += dir; renderPanelDay(); }
+function changeDay(dir) { panelDayOffset += dir; }
  
 async function renderPanelDay() {
-  const d = new Date(today); d.setDate(d.getDate() + panelDayOffset);
-  const label = panelDayOffset === 0
+  const monday = getMondayOfWeek(weekOffset);
+  const d = new Date(monday); d.setDate(d.getDate() + activeDayOffset);
+  const label = d.toDateString() === today.toDateString()
     ? 'Hoy · ' + d.toLocaleDateString('es-AR', { day:'numeric', month:'long' })
     : d.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
-  document.getElementById('panel-day-label').textContent = label.charAt(0).toUpperCase() + label.slice(1);
  
   const list = document.getElementById('agenda-list');
   list.innerHTML = '<div class="loading-state">Cargando turnos...</div>';
