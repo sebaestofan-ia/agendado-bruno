@@ -23,28 +23,28 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom));}
-
+ 
 /* VIEWS */
 #view-patient,#view-doctor{display:none;}
 #view-patient.active,#view-doctor.active{display:block;}
-
+ 
 /* SWITCH */
 .switch-wrap{position:fixed;top:14px;right:14px;z-index:500;}
 .switch-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;color:var(--text-mid);cursor:pointer;box-shadow:var(--shadow-sm);transition:all .2s;letter-spacing:.3px;}
 .switch-btn:hover{border-color:var(--blue);color:var(--blue);}
-
+ 
 /* HERO */
 .hero{background:var(--white);border-bottom:1px solid var(--border);padding:56px 24px 28px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);}
 .hero::before{content:'';position:absolute;top:-120px;right:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(26,79,138,.05),transparent 70%);pointer-events:none;}
 .hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.06),transparent 70%);pointer-events:none;}
-
+ 
 .avatar-wrap{position:relative;width:88px;height:88px;margin:0 auto 18px;cursor:pointer;}
 .avatar-img{width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid var(--white);box-shadow:0 0 0 2px var(--blue),var(--shadow-md);background:var(--pearl);display:flex;align-items:center;justify-content:center;font-size:36px;transition:filter .2s;overflow:hidden;}
 .avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:var(--blue);border:2px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:11px;box-shadow:var(--shadow-sm);transition:transform .2s;}
 .avatar-wrap:hover .avatar-edit{transform:scale(1.1);}
 .avatar-wrap:hover .avatar-img{filter:brightness(.92);}
 #avatar-input{display:none;}
-
+ 
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue-pale);border:1px solid rgba(26,79,138,.15);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
 .hero-name{font-family:'Lora',serif;font-size:24px;font-weight:600;color:var(--text);text-align:center;line-height:1.2;margin-bottom:6px;opacity:0;animation:fadeUp .5s .1s ease forwards;}
 .hero-spec{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;opacity:0;animation:fadeUp .5s .2s ease forwards;}
@@ -57,7 +57,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--teal);position:relative;}
 .online-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--teal);animation:pulse 2s infinite;}
 @keyframes pulse{0%{transform:scale(1);opacity:.5;}60%{transform:scale(1.5);opacity:0;}100%{transform:scale(1);opacity:0;}}
-
+ 
 /* TAB NAV */
 .tab-nav{position:fixed;bottom:0;left:0;right:0;height:var(--tab-h);padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:200;box-shadow:0 -4px 20px rgba(26,40,80,.06);}
 .tab-btn{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:all .2s;position:relative;}
@@ -67,7 +67,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .tab-btn.active .tab-icon{transform:translateY(-1px);}
 .tab-label{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-dim);transition:color .2s;}
 .tab-btn.active .tab-label{color:var(--blue);}
-
+ 
 /* SECTIONS */
 .section{display:none;padding:22px 16px 32px;}
 .section.active{display:block;animation:fadeUp .3s ease;}
@@ -75,10 +75,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .sec-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:5px;}
 .sec-title{font-family:'Lora',serif;font-size:22px;color:var(--text);margin-bottom:4px;line-height:1.25;}
 .sec-sub{font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:20px;}
-
+ 
 /* CARD */
 .card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px;}
-
+ 
 /* CALENDAR */
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border);}
 .cal-month-label{font-family:'Lora',serif;font-size:17px;color:var(--text);}
@@ -98,7 +98,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .legend-dot{width:8px;height:8px;border-radius:50%;}
 .legend-dot.avail{background:var(--teal);}
 .legend-dot.taken{background:var(--border2);}
-
+ 
 /* SLOTS */
 .slots-header{display:flex;align-items:center;justify-content:space-between;padding:15px 18px 12px;border-bottom:1px solid var(--border);}
 .slots-date{font-family:'Lora',serif;font-size:16px;color:var(--text);}
@@ -112,7 +112,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .slot.taken{color:var(--border2);text-decoration:line-through;pointer-events:none;opacity:.5;border-style:dashed;}
 .slot-dur{display:block;font-size:9px;margin-top:3px;opacity:.7;}
 .slot.selected .slot-dur{opacity:.8;}
-
+ 
 /* FORM */
 .form-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
 .form-header-icon{width:40px;height:40px;border-radius:10px;background:var(--blue-pale);border:1px solid rgba(26,79,138,.15);display:flex;align-items:center;justify-content:center;font-size:18px;}
@@ -129,11 +129,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .btn-confirm{width:100%;padding:15px;background:var(--blue);color:var(--white);border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .25s;margin-top:8px;position:relative;}
 .btn-confirm:hover{background:var(--blue-mid);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,79,138,.3);}
 .btn-confirm:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-
+ 
 /* LOADING SPINNER */
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
+ 
 /* SUCCESS */
 .success-card{display:none;text-align:center;padding:40px 24px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);}
 .success-card.visible{display:block;animation:fadeUp .4s ease;}
@@ -149,11 +149,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .nb-text strong{color:var(--teal);}
 .btn-secondary{width:100%;padding:13px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--text-mid);cursor:pointer;transition:all .2s;}
 .btn-secondary:hover{border-color:var(--blue);color:var(--blue);}
-
+ 
 /* ERROR TOAST */
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--rose);color:white;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:1000;transition:transform .3s ease;box-shadow:var(--shadow-md);}
 .toast.show{transform:translateX(-50%) translateY(0);}
-
+ 
 /* FREE BANNER */
 .free-banner{background:linear-gradient(135deg,var(--blue),var(--blue-mid));border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 20px rgba(26,79,138,.2);position:relative;overflow:hidden;}
 .free-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.07);}
@@ -161,7 +161,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .free-banner-text{position:relative;z-index:1;}
 .free-banner-text h4{font-size:14px;font-weight:700;color:var(--white);margin-bottom:3px;}
 .free-banner-text p{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;}
-
+ 
 /* CONTACTO */
 .contact-item{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:background .15s;}
 .contact-item:last-child{border-bottom:none;}
@@ -176,7 +176,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .redes-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .red-social{display:flex;align-items:center;gap:10px;padding:13px 14px;background:var(--white);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);font-size:13px;font-weight:500;transition:all .2s;box-shadow:var(--shadow-sm);}
 .red-social:hover{border-color:var(--blue);color:var(--blue);}
-
+ 
 /* INFO */
 .info-block{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px;box-shadow:var(--shadow-sm);}
 .info-block h3{font-family:'Lora',serif;font-size:17px;color:var(--text);margin-bottom:10px;}
@@ -188,11 +188,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .horario-cerrado{color:var(--text-dim);font-style:italic;}
 .service-tag{display:inline-block;margin:3px 2px;padding:5px 12px;background:var(--pearl);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-mid);transition:all .2s;}
 .service-tag:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-pale);}
-
+ 
 /* FAB */
 .fab-wpp{position:fixed;bottom:calc(var(--tab-h) + 14px + env(safe-area-inset-bottom));right:16px;width:50px;height:50px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:22px;text-decoration:none;z-index:150;box-shadow:0 4px 16px rgba(37,211,102,.35);transition:transform .2s;}
 .fab-wpp:hover{transform:scale(1.08);}
-
+ 
 /* ══ PANEL MÉDICO ══ */
 #view-doctor{background:var(--snow);min-height:100vh;}
 .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(160deg,var(--snow),var(--pearl));}
@@ -209,31 +209,31 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .login-hint{font-size:11px;color:var(--text-dim);margin-top:14px;text-align:center;}
 .login-hint strong{color:var(--blue);}
 .login-error{font-size:12px;color:var(--rose);margin-top:8px;display:none;}
-
+ 
 .panel-header{background:var(--white);border-bottom:1px solid var(--border);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:100;}
 .panel-logo{font-family:'Lora',serif;font-size:20px;color:var(--blue);}
 .btn-logout{font-size:11px;font-weight:600;color:var(--text-dim);background:var(--pearl);border:1px solid var(--border);padding:5px 12px;border-radius:20px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;}
 .btn-logout:hover{border-color:var(--rose);color:var(--rose);}
-
+ 
 .panel-stats{display:grid;grid-template-columns:repeat(3,1fr);background:var(--white);border-bottom:1px solid var(--border);}
 .ps-item{padding:16px 10px;text-align:center;border-right:1px solid var(--border);}
 .ps-item:last-child{border-right:none;}
 .ps-num{font-family:'Lora',serif;font-size:26px;color:var(--blue);line-height:1;}
 .ps-label{font-size:10px;color:var(--text-dim);margin-top:4px;}
-
+ 
 .panel-tabs{display:flex;background:var(--white);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:65px;z-index:90;box-shadow:var(--shadow-sm);}
 .panel-tabs::-webkit-scrollbar{display:none;}
 .ptab{flex-shrink:0;padding:14px 18px;font-size:12px;font-weight:600;letter-spacing:.3px;color:var(--text-dim);border:none;background:transparent;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;border-bottom:2px solid transparent;transition:all .2s;}
 .ptab.active{color:var(--blue);border-bottom-color:var(--blue);}
-
+ 
 .panel-section{display:none;padding:18px 16px 100px;}
 .panel-section.active{display:block;}
-
+ 
 .day-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:12px 14px;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm);}
 .day-nav-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--pearl);color:var(--text-mid);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
 .day-nav-btn:hover{background:var(--blue);color:var(--white);border-color:var(--blue);}
 .day-nav-label{font-family:'Lora',serif;font-size:16px;color:var(--text);}
-
+ 
 .turno-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;box-shadow:var(--shadow-sm);border-left:3px solid transparent;}
 .turno-card.confirmado{border-left-color:var(--teal);}
 .turno-card.pendiente{border-left-color:var(--amber);}
@@ -257,14 +257,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .btn-action.cancel:hover{background:var(--rose-pale);}
 .btn-action.wpp{border-color:rgba(37,211,102,.3);color:#25D366;}
 .btn-action.wpp:hover{background:rgba(37,211,102,.06);}
-
+ 
 .paciente-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-sm);}
 .pac-avatar{width:42px;height:42px;border-radius:50%;background:var(--blue-pale);border:1px solid rgba(26,79,138,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .pac-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
 .pac-info{font-size:12px;color:var(--text-mid);}
 .pac-wpp{margin-left:auto;width:34px;height:34px;border-radius:50%;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;font-size:16px;text-decoration:none;flex-shrink:0;transition:all .2s;}
 .pac-wpp:hover{background:rgba(37,211,102,.2);transform:scale(1.08);}
-
+ 
 .config-section{margin-bottom:22px;}
 .config-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:10px;display:block;}
 .config-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;box-shadow:var(--shadow-sm);}
@@ -276,19 +276,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .toggle.on::after{left:21px;}
 .block-day-btn{width:100%;padding:13px;border:1.5px dashed var(--border2);border-radius:10px;background:transparent;color:var(--text-dim);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;}
 .block-day-btn:hover{border-color:var(--rose);color:var(--rose);}
-
+ 
 .empty-state{text-align:center;padding:40px 20px;}
 .empty-state-icon{font-size:40px;margin-bottom:12px;}
 .empty-state p{font-size:14px;color:var(--text-dim);}
-
 .loading-state{text-align:center;padding:30px;color:var(--text-dim);font-size:13px;}
+.dia-btn{padding:7px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--snow);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;transition:all .2s;}
+.dia-btn.active{background:var(--blue);border-color:var(--blue);color:var(--white);}
+.dia-btn:hover:not(.active){border-color:var(--blue);color:var(--blue);}
 </style>
 </head>
 <body>
-
+ 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
-
+ 
 <!-- SWITCH -->
 <div class="switch-wrap">
   <button class="switch-btn" onclick="switchView()">
@@ -296,10 +298,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
     <span id="switch-label">Panel médico</span>
   </button>
 </div>
-
+ 
 <!-- ══════════════ VISTA PACIENTE ══════════════ -->
 <div id="view-patient" class="active">
-
+ 
   <div class="hero">
     <div class="avatar-wrap" onclick="document.getElementById('avatar-input').click()">
       <div class="avatar-img" id="avatar-display">🦷</div>
@@ -322,7 +324,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <div class="stat-item"><div class="stat-num"><span class="online-dot"></span></div><div class="stat-label">Online</div></div>
     </div>
   </div>
-
+ 
   <nav class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('turno',this)">
       <span class="tab-icon">📅</span><span class="tab-label">Turno</span>
@@ -334,9 +336,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <span class="tab-icon">🏥</span><span class="tab-label">Info</span>
     </button>
   </nav>
-
+ 
   <a class="fab-wpp" href="https://wa.me/543815293000" target="_blank">💬</a>
-
+ 
   <!-- TURNO -->
   <div id="sec-turno" class="section active">
     <div id="booking-flow">
@@ -347,11 +349,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
           <p>Reservá en segundos, sin crear cuenta. Confirmación inmediata.</p>
         </div>
       </div>
-
+ 
       <p class="sec-eyebrow">Reservar turno</p>
       <h2 class="sec-title">Elegí tu día</h2>
       <p class="sec-sub">Días disponibles en verde · Tarde: 16:00 a 19:30 hs</p>
-
+ 
       <div class="card">
         <div class="cal-header">
           <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
@@ -364,7 +366,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
           <div class="legend-item"><span class="legend-dot taken"></span>Sin turnos</div>
         </div>
       </div>
-
+ 
       <div class="card" id="slots-wrap" style="display:none">
         <div class="slots-header">
           <span class="slots-date" id="slots-date-label"></span>
@@ -378,7 +380,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
           <div class="slots-grid" id="slots-grid-45"></div>
         </div>
       </div>
-
+ 
       <div class="card booking-form" id="booking-form">
         <div class="form-header">
           <div class="form-header-icon">📋</div>
@@ -421,7 +423,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
         </div>
       </div>
     </div>
-
+ 
     <div class="success-card" id="success-card">
       <div class="success-icon-wrap">✓</div>
       <h3>¡Turno confirmado!</h3>
@@ -434,7 +436,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <button class="btn-secondary" onclick="resetFlow()">Reservar otro turno</button>
     </div>
   </div>
-
+ 
   <!-- CONTACTO -->
   <div id="sec-contacto" class="section">
     <p class="sec-eyebrow">Contacto</p>
@@ -460,7 +462,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <a class="red-social" href="https://maps.google.com/?q=Jujuy+173+Tucumán" target="_blank"><span style="font-size:18px">🗺️</span> Cómo llegar</a>
     </div>
   </div>
-
+ 
   <!-- INFO -->
   <div id="sec-info" class="section">
     <p class="sec-eyebrow">Información</p>
@@ -491,9 +493,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <p style="margin-top:12px;font-size:12px;color:var(--text-dim)">Turnos de 30 o 45 minutos según tipo de consulta.</p>
     </div>
   </div>
-
+ 
 </div><!-- /view-patient -->
-
+ 
 <!-- ══════════════ PANEL MÉDICO ══════════════ -->
 <div id="view-doctor">
   <div id="panel-login" class="login-wrap">
@@ -509,7 +511,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <p class="login-hint">Demo: <strong>dr.gonzalez</strong> · <strong>cemij2025</strong></p>
     </div>
   </div>
-
+ 
   <div id="panel-inner" style="display:none">
     <div class="panel-header">
       <div class="panel-logo">Agendado.</div>
@@ -528,7 +530,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <button class="ptab" onclick="switchPanelTab('pacientes',this)">👤 Pacientes</button>
       <button class="ptab" onclick="switchPanelTab('config',this)">⚙️ Config</button>
     </div>
-
+ 
     <div id="ptab-agenda" class="panel-section active">
       <div class="day-nav">
         <button class="day-nav-btn" onclick="changeDay(-1)">‹</button>
@@ -537,12 +539,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       </div>
       <div id="agenda-list"></div>
     </div>
-
+ 
     <div id="ptab-pacientes" class="panel-section">
       <div id="pacientes-list"></div>
     </div>
-
+ 
     <div id="ptab-config" class="panel-section">
+ 
+      <!-- FOTO -->
       <div class="config-section">
         <span class="config-label">Foto de perfil</span>
         <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm)">
@@ -554,33 +558,90 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
           </div>
         </div>
       </div>
+ 
+      <!-- DATOS EDITABLES -->
       <div class="config-section">
         <span class="config-label">Datos del profesional</span>
-        <div class="config-row"><span class="config-row-label">Nombre</span><span class="config-row-val">Dr. Bruno González Gómez</span></div>
-        <div class="config-row"><span class="config-row-label">Especialidad</span><span class="config-row-val">Cirugía Dentomaxilar</span></div>
-        <div class="config-row"><span class="config-row-label">Consultorio</span><span class="config-row-val">CEMIJ · Jujuy 173</span></div>
-        <div class="config-row"><span class="config-row-label">WhatsApp</span><span class="config-row-val">+543815293000</span></div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow-sm)">
+          <div class="form-group">
+            <label class="form-label">Nombre completo</label>
+            <input class="form-input" id="cfg-nombre" type="text" placeholder="Dr. Bruno González Gómez">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Especialidad</label>
+            <input class="form-input" id="cfg-especialidad" type="text" placeholder="Cirugía Dentomaxilar / Maxilofacial">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Consultorio</label>
+            <input class="form-input" id="cfg-consultorio" type="text" placeholder="Clínica CEMIJ">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dirección</label>
+            <input class="form-input" id="cfg-direccion" type="text" placeholder="Jujuy 173, Tucumán">
+          </div>
+          <div class="form-group">
+            <label class="form-label">WhatsApp / Teléfono</label>
+            <input class="form-input" id="cfg-telefono" type="tel" placeholder="+543815293000">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="cfg-email" type="email" placeholder="brusaje2213@hotmail.com">
+          </div>
+        </div>
       </div>
+ 
+      <!-- HORARIOS EDITABLES -->
       <div class="config-section">
-        <span class="config-label">Horario activo</span>
-        <div class="config-row"><span class="config-row-label">Días</span><span class="config-row-val">Lun – Vie</span></div>
-        <div class="config-row"><span class="config-row-label">Horario</span><span class="config-row-val">16:00 – 19:30</span></div>
-        <div class="config-row"><span class="config-row-label">Duración turnos</span><span class="config-row-val">30 min / 45 min</span></div>
+        <span class="config-label">Horario de atención</span>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow-sm)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+            <div>
+              <label class="form-label">Desde</label>
+              <input class="form-input" id="cfg-hora-inicio" type="time" value="16:00">
+            </div>
+            <div>
+              <label class="form-label">Hasta</label>
+              <input class="form-input" id="cfg-hora-fin" type="time" value="19:30">
+            </div>
+          </div>
+          <div>
+            <label class="form-label">Días de atención</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+              <button type="button" class="dia-btn active" data-dia="lun" onclick="toggleDia(this)">Lun</button>
+              <button type="button" class="dia-btn active" data-dia="mar" onclick="toggleDia(this)">Mar</button>
+              <button type="button" class="dia-btn active" data-dia="mie" onclick="toggleDia(this)">Mié</button>
+              <button type="button" class="dia-btn active" data-dia="jue" onclick="toggleDia(this)">Jue</button>
+              <button type="button" class="dia-btn active" data-dia="vie" onclick="toggleDia(this)">Vie</button>
+              <button type="button" class="dia-btn" data-dia="sab" onclick="toggleDia(this)">Sáb</button>
+              <button type="button" class="dia-btn" data-dia="dom" onclick="toggleDia(this)">Dom</button>
+            </div>
+          </div>
+        </div>
       </div>
+ 
+      <!-- NOTIFICACIONES -->
       <div class="config-section">
         <span class="config-label">Notificaciones</span>
         <div class="config-row"><span class="config-row-label">Recordatorio 24hs</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
         <div class="config-row"><span class="config-row-label">Nueva reserva</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
         <div class="config-row"><span class="config-row-label">Resumen diario</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
       </div>
+ 
+      <!-- GUARDAR -->
+      <button class="btn-confirm" id="btn-guardar-config" onclick="guardarConfig()" style="margin-bottom:20px">
+        Guardar cambios
+      </button>
+ 
+      <!-- BLOQUEAR DÍAS -->
       <div class="config-section">
         <span class="config-label">Gestión de días</span>
-        <button class="block-day-btn" onclick="showToast('Función disponible con backend completo 🔜','info')">🚫 Bloquear días / vacaciones</button>
+        <button class="block-day-btn" onclick="showToast('Función disponible próximamente 🔜','info')">🚫 Bloquear días / vacaciones</button>
       </div>
+ 
     </div>
   </div>
 </div>
-
+ 
 <script>
 // ══════════════════════════════════════
 // SUPABASE CONFIG
@@ -588,21 +649,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 const SB_URL = 'https://nnbmkqfjepvaildxcoac.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5uYm1rcWZqZXB2YWlsZHhjb2FjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2OTAyNDUsImV4cCI6MjA5MTI2NjI0NX0.L3yZ77b0l4PrYAhVORwZt7IRf2BaOZi8-RQNDwEi_gs';
 const HEADERS = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
-
+ 
 let PROFESIONAL_ID = null;
-
+ 
 async function sbGet(path) {
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, { headers: HEADERS });
   return r.json();
 }
-
+ 
 async function sbPost(path, body) {
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
     method: 'POST', headers: HEADERS, body: JSON.stringify(body)
   });
   return r.json();
 }
-
+ 
 async function sbPatch(path, body) {
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
     method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=representation' },
@@ -610,7 +671,7 @@ async function sbPatch(path, body) {
   });
   return r.json();
 }
-
+ 
 // Toast
 function showToast(msg, type='error') {
   const t = document.getElementById('toast');
@@ -619,7 +680,7 @@ function showToast(msg, type='error') {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3500);
 }
-
+ 
 // ══════════════════════════════════════
 // INIT — cargar profesional
 // ══════════════════════════════════════
@@ -632,7 +693,7 @@ async function init() {
     }
   } catch(e) { console.error('Error conectando Supabase:', e); }
 }
-
+ 
 async function loadTurnosMes() {
   if (!PROFESIONAL_ID) return;
   const now = new Date();
@@ -645,7 +706,7 @@ async function loadTurnosMes() {
     }
   } catch(e) {}
 }
-
+ 
 // ══════════════════════════════════════
 // AVATAR
 // ══════════════════════════════════════
@@ -660,7 +721,7 @@ function handleAvatar(e) {
   };
   reader.readAsDataURL(file);
 }
-
+ 
 // ══════════════════════════════════════
 // TABS PACIENTE
 // ══════════════════════════════════════
@@ -671,7 +732,7 @@ function switchTab(id, btn) {
   btn.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
+ 
 // ══════════════════════════════════════
 // SWITCH VIEW
 // ══════════════════════════════════════
@@ -683,7 +744,7 @@ function switchView() {
   document.getElementById('switch-icon').textContent = inDoctor ? '👤' : '🩺';
   document.getElementById('switch-label').textContent = inDoctor ? 'Vista paciente' : 'Panel médico';
 }
-
+ 
 // ══════════════════════════════════════
 // CALENDAR
 // ══════════════════════════════════════
@@ -691,10 +752,10 @@ const today = new Date();
 let curYear = today.getFullYear(), curMonth = today.getMonth();
 let selDate = null, selSlot = null, selDur = null;
 let turnosFecha = []; // turnos del día seleccionado desde Supabase
-
+ 
 const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const dayNames = ['D','L','M','M','J','V','S'];
-
+ 
 function getAvailDays() {
   const s = new Set(), dim = new Date(curYear, curMonth+1, 0).getDate();
   for (let d = 1; d <= dim; d++) {
@@ -703,7 +764,7 @@ function getAvailDays() {
   }
   return s;
 }
-
+ 
 function renderCalendar() {
   document.getElementById('cal-month-label').textContent = monthNames[curMonth] + ' ' + curYear;
   const grid = document.getElementById('cal-grid'); grid.innerHTML = '';
@@ -729,7 +790,7 @@ function renderCalendar() {
     grid.appendChild(el);
   }
 }
-
+ 
 function changeMonth(dir) {
   curMonth += dir;
   if (curMonth < 0) { curMonth = 11; curYear--; }
@@ -739,7 +800,7 @@ function changeMonth(dir) {
   document.getElementById('booking-form').classList.remove('visible');
   renderCalendar();
 }
-
+ 
 // Genera slots de 30 y 45 min entre 16:00 y 19:30
 function generateSlots(dur) {
   const slots = [];
@@ -751,45 +812,45 @@ function generateSlots(dur) {
   }
   return slots;
 }
-
+ 
 async function selectDay(d) {
   selDate = new Date(curYear, curMonth, d);
   selSlot = null; selDur = null;
   document.getElementById('booking-form').classList.remove('visible');
   renderCalendar();
-
+ 
   const label = selDate.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
   document.getElementById('slots-date-label').textContent = label.charAt(0).toUpperCase() + label.slice(1);
   document.getElementById('slots-count-label').textContent = '...';
-
+ 
   const wrap = document.getElementById('slots-wrap');
   wrap.style.display = 'block';
   document.getElementById('slots-loading').style.display = 'block';
   document.getElementById('slots-content').style.display = 'none';
   setTimeout(() => wrap.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
-
+ 
   // Cargar turnos del día desde Supabase
   const fechaStr = selDate.toISOString().split('T')[0];
   try {
     const data = await sbGet(`turnos?profesional_id=eq.${PROFESIONAL_ID}&fecha=eq.${fechaStr}&estado=neq.cancelado&select=hora,duracion`);
     turnosFecha = Array.isArray(data) ? data : [];
   } catch(e) { turnosFecha = []; }
-
+ 
   // Marcar como tomados los slots ocupados
   const tomados = new Set(turnosFecha.map(t => t.hora.substring(0,5)));
-
+ 
   const slots30 = generateSlots(30);
   const slots45 = generateSlots(45);
   const available = [...slots30, ...slots45].filter(s => !tomados.has(s)).length;
   document.getElementById('slots-count-label').textContent = available + ' disponibles';
-
+ 
   renderSlotGrid('slots-grid-30', slots30, 30, tomados);
   renderSlotGrid('slots-grid-45', slots45, 45, tomados);
-
+ 
   document.getElementById('slots-loading').style.display = 'none';
   document.getElementById('slots-content').style.display = 'block';
 }
-
+ 
 function renderSlotGrid(gridId, slots, dur, tomados) {
   const grid = document.getElementById(gridId); grid.innerHTML = '';
   slots.forEach(t => {
@@ -801,7 +862,7 @@ function renderSlotGrid(gridId, slots, dur, tomados) {
     grid.appendChild(el);
   });
 }
-
+ 
 function selectSlot(time, dur, el) {
   selSlot = time; selDur = dur;
   document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
@@ -813,7 +874,7 @@ function selectSlot(time, dur, el) {
   form.classList.add('visible');
   setTimeout(() => form.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
 }
-
+ 
 // ══════════════════════════════════════
 // CONFIRMAR TURNO → SUPABASE
 // ══════════════════════════════════════
@@ -822,18 +883,18 @@ async function confirmBooking() {
   const tel = document.getElementById('inp-tel').value.trim();
   const email = document.getElementById('inp-email').value.trim();
   const motivo = document.getElementById('inp-motivo').value;
-
+ 
   if (!nombre || !tel) {
     if (!nombre) document.getElementById('inp-nombre').style.borderColor = 'var(--blue)';
     if (!tel) document.getElementById('inp-tel').style.borderColor = 'var(--blue)';
     showToast('Completá nombre y teléfono para continuar.');
     return;
   }
-
+ 
   const btn = document.getElementById('btn-confirmar');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Guardando...';
-
+ 
   try {
     const fechaStr = selDate.toISOString().split('T')[0];
     const result = await sbPost('turnos', {
@@ -847,7 +908,7 @@ async function confirmBooking() {
       duracion: selDur,
       estado: 'pendiente'
     });
-
+ 
     if (result && result[0] && result[0].id) {
       // Éxito
       const label = selDate.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
@@ -870,11 +931,11 @@ async function confirmBooking() {
     showToast('Error al guardar el turno. Intentá de nuevo.');
     console.error(e);
   }
-
+ 
   btn.disabled = false;
   btn.innerHTML = 'Confirmar turno →';
 }
-
+ 
 function resetFlow() {
   document.getElementById('success-card').classList.remove('visible');
   document.getElementById('booking-flow').style.display = 'block';
@@ -886,7 +947,7 @@ function resetFlow() {
   renderCalendar();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
+ 
 // ══════════════════════════════════════
 // PANEL MÉDICO
 // ══════════════════════════════════════
@@ -905,64 +966,64 @@ function doLogin() {
     document.getElementById('login-pass').value = '';
   }
 }
-
+ 
 function doLogout() {
   document.getElementById('panel-inner').style.display = 'none';
   document.getElementById('panel-login').style.display = 'flex';
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
 }
-
+ 
 async function loadPanelStats() {
   if (!PROFESIONAL_ID) return;
   try {
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
-
+ 
     // Inicio de semana (lunes)
     const dayOfWeek = now.getDay() || 7;
     const monday = new Date(now); monday.setDate(now.getDate() - dayOfWeek + 1);
     const mondayStr = monday.toISOString().split('T')[0];
-
+ 
     const fromMes = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
     const toMes   = new Date(now.getFullYear(), now.getMonth()+1, 0).toISOString().split('T')[0];
-
+ 
     const [hoy, semana, mes] = await Promise.all([
       sbGet(`turnos?profesional_id=eq.${PROFESIONAL_ID}&fecha=eq.${todayStr}&estado=neq.cancelado&select=id`),
       sbGet(`turnos?profesional_id=eq.${PROFESIONAL_ID}&fecha=gte.${mondayStr}&fecha=lte.${todayStr}&estado=neq.cancelado&select=id`),
       sbGet(`turnos?profesional_id=eq.${PROFESIONAL_ID}&fecha=gte.${fromMes}&fecha=lte.${toMes}&estado=neq.cancelado&select=id`),
     ]);
-
+ 
     document.getElementById('panel-stat-hoy').textContent    = Array.isArray(hoy)    ? hoy.length    : '—';
     document.getElementById('panel-stat-semana').textContent = Array.isArray(semana)  ? semana.length  : '—';
     document.getElementById('panel-stat-mes').textContent    = Array.isArray(mes)     ? mes.length     : '—';
   } catch(e) { console.error(e); }
 }
-
+ 
 let panelDayOffset = 0;
 function changeDay(dir) { panelDayOffset += dir; renderPanelDay(); }
-
+ 
 async function renderPanelDay() {
   const d = new Date(today); d.setDate(d.getDate() + panelDayOffset);
   const label = panelDayOffset === 0
     ? 'Hoy · ' + d.toLocaleDateString('es-AR', { day:'numeric', month:'long' })
     : d.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
   document.getElementById('panel-day-label').textContent = label.charAt(0).toUpperCase() + label.slice(1);
-
+ 
   const list = document.getElementById('agenda-list');
   list.innerHTML = '<div class="loading-state">Cargando turnos...</div>';
-
+ 
   if (!PROFESIONAL_ID) { list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Sin conexión a la base de datos</p></div>'; return; }
-
+ 
   try {
     const fechaStr = d.toISOString().split('T')[0];
     const data = await sbGet(`turnos?profesional_id=eq.${PROFESIONAL_ID}&fecha=eq.${fechaStr}&select=*&order=hora.asc`);
-
+ 
     if (!Array.isArray(data) || data.length === 0) {
       list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Sin turnos para este día</p></div>';
       return;
     }
-
+ 
     list.innerHTML = data.map(t => `
       <div class="turno-card ${t.estado}" id="tc-${t.id}">
         <div class="turno-card-header">
@@ -985,7 +1046,7 @@ async function renderPanelDay() {
     list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error cargando turnos</p></div>';
   }
 }
-
+ 
 async function cambiarEstado(id, estado) {
   try {
     await sbPatch(`turnos?id=eq.${id}`, { estado });
@@ -994,7 +1055,7 @@ async function cambiarEstado(id, estado) {
     showToast(estado === 'confirmado' ? '✓ Turno confirmado' : '✗ Turno cancelado', 'info');
   } catch(e) { showToast('Error al actualizar el turno.'); }
 }
-
+ 
 async function loadPacientes() {
   if (!PROFESIONAL_ID) return;
   const list = document.getElementById('pacientes-list');
@@ -1021,18 +1082,87 @@ async function loadPacientes() {
     list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error cargando pacientes</p></div>';
   }
 }
-
+ 
 function switchPanelTab(id, btn) {
   document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
   document.getElementById('ptab-' + id).classList.add('active');
   btn.classList.add('active');
   if (id === 'pacientes') loadPacientes();
+  if (id === 'config') loadConfig();
 }
-
+ 
+// ══════════════════════════════════════
+// CONFIG EDITABLE
+// ══════════════════════════════════════
+function toggleDia(btn) {
+  btn.classList.toggle('active');
+}
+ 
+async function loadConfig() {
+  if (!PROFESIONAL_ID) return;
+  try {
+    const data = await sbGet(`profesionales?id=eq.${PROFESIONAL_ID}&select=*&limit=1`);
+    if (!data || !data[0]) return;
+    const p = data[0];
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
+    setVal('cfg-nombre',       p.nombre);
+    setVal('cfg-especialidad', p.especialidad);
+    setVal('cfg-consultorio',  p.consultorio);
+    setVal('cfg-direccion',    p.direccion);
+    setVal('cfg-telefono',     p.telefono);
+    setVal('cfg-email',        p.email);
+    if (p.horario_inicio) setVal('cfg-hora-inicio', p.horario_inicio.substring(0,5));
+    if (p.horario_fin)    setVal('cfg-hora-fin',    p.horario_fin.substring(0,5));
+    if (p.dias_atencion && Array.isArray(p.dias_atencion)) {
+      document.querySelectorAll('.dia-btn').forEach(btn => {
+        btn.classList.toggle('active', p.dias_atencion.includes(btn.dataset.dia));
+      });
+    }
+  } catch(e) { console.error('Error cargando config:', e); }
+}
+ 
+async function guardarConfig() {
+  if (!PROFESIONAL_ID) { showToast('Sin conexión a la base de datos.'); return; }
+  const btn = document.getElementById('btn-guardar-config');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Guardando...';
+ 
+  const dias = [...document.querySelectorAll('.dia-btn.active')].map(b => b.dataset.dia);
+  const nombre = document.getElementById('cfg-nombre').value.trim();
+  if (!nombre) {
+    showToast('El nombre no puede estar vacío.');
+    btn.disabled = false; btn.textContent = 'Guardar cambios'; return;
+  }
+ 
+  const payload = {
+    nombre,
+    especialidad:  document.getElementById('cfg-especialidad').value.trim(),
+    consultorio:   document.getElementById('cfg-consultorio').value.trim(),
+    direccion:     document.getElementById('cfg-direccion').value.trim(),
+    telefono:      document.getElementById('cfg-telefono').value.trim(),
+    email:         document.getElementById('cfg-email').value.trim(),
+    horario_inicio: document.getElementById('cfg-hora-inicio').value + ':00',
+    horario_fin:    document.getElementById('cfg-hora-fin').value + ':00',
+    dias_atencion:  dias,
+  };
+ 
+  try {
+    await sbPatch(`profesionales?id=eq.${PROFESIONAL_ID}`, payload);
+    showToast('✓ Cambios guardados correctamente', 'info');
+  } catch(e) {
+    showToast('Error al guardar. Intentá de nuevo.');
+    console.error(e);
+  }
+ 
+  btn.disabled = false;
+  btn.textContent = 'Guardar cambios';
+}
+ 
 // ══ INIT ══
 renderCalendar();
 init();
 </script>
 </body>
 </html>
+ 
