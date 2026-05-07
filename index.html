@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Dr. Bruno González Gómez · Agendado</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1a4f8a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Agendado">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -84,9 +93,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .cal-month-label{font-family:'Lora',serif;font-size:17px;color:var(--text);}
 .cal-nav{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--pearl);color:var(--text-mid);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
 .cal-nav:hover{background:var(--blue);color:var(--white);border-color:var(--blue);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:12px;}
-.cal-day-name{text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim);padding:4px 0 8px;}
-.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px 10px;}
+.cal-day-name{text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim);padding:4px 0 8px;height:30px;}
+.cal-day{height:38px;width:38px;margin:0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text);}
 .cal-day.empty,.cal-day.past{color:var(--text-dim);pointer-events:none;}
 .cal-day.available{background:var(--teal-pale);color:var(--teal);font-weight:700;}
 .cal-day.available:hover{background:var(--teal);color:var(--white);}
@@ -284,6 +293,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .dia-btn{padding:7px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--snow);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;transition:all .2s;}
 .dia-btn.active{background:var(--blue);border-color:var(--blue);color:var(--white);}
 .dia-btn:hover:not(.active){border-color:var(--blue);color:var(--blue);}
+ 
+/* ── MODAL NUEVO TURNO ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,31,61,.5);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-sheet{background:var(--white);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,0,.15,1);box-shadow:0 -8px 40px rgba(15,31,61,.15);position:relative;}
+.modal-overlay.open .modal-sheet{transform:translateY(0);}
+.modal-handle{width:40px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 20px;}
+.modal-title{font-family:'Lora',serif;font-size:20px;color:var(--text);margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--text-mid);margin-bottom:20px;}
+.modal-close{position:absolute;top:20px;right:20px;width:32px;height:32px;border-radius:50%;background:var(--snow);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-mid);}
 </style>
 </head>
 <body>
@@ -540,6 +559,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
           <button class="day-nav-btn" onclick="changeWeek(-1)">‹</button>
           <button class="day-nav-btn" onclick="changeWeek(0)" style="font-size:10px;font-weight:700;padding:0 8px;border-radius:8px;width:auto">Hoy</button>
           <button class="day-nav-btn" onclick="changeWeek(1)">›</button>
+          <button onclick="abrirNuevoTurno()" style="padding:0 12px;height:32px;background:var(--blue);color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;white-space:nowrap;">+ Nuevo turno</button>
         </div>
       </div>
       <!-- Tabs de días -->
@@ -549,7 +569,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
     </div>
  
     <div id="ptab-pacientes" class="panel-section">
+      <!-- Buscador -->
+      <div style="position:relative;margin-bottom:14px;">
+        <input
+          id="pac-search"
+          class="form-input"
+          type="text"
+          placeholder="🔍  Buscar paciente por nombre..."
+          oninput="filtrarPacientes(this.value)"
+          style="padding-left:16px;">
+      </div>
       <div id="pacientes-list"></div>
+      <div id="pacientes-empty" style="display:none;" class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <p>No se encontraron pacientes con ese nombre</p>
+      </div>
     </div>
  
     <div id="ptab-config" class="panel-section">
@@ -699,7 +733,10 @@ async function init() {
       PROFESIONAL_ID = data[0].id;
       await loadTurnosMes();
     }
-  } catch(e) { console.error('Error conectando Supabase:', e); }
+  } catch(e) {
+    console.warn('Supabase no disponible, modo demo activo');
+    // Calendario sigue funcionando en modo demo
+  }
 }
  
 async function loadTurnosMes() {
@@ -1122,6 +1159,8 @@ async function cambiarEstado(id, estado) {
   } catch(e) { showToast('Error al actualizar el turno.'); }
 }
  
+let PACIENTES_DATA = [];
+ 
 async function loadPacientes() {
   if (!PROFESIONAL_ID) return;
   const list = document.getElementById('pacientes-list');
@@ -1130,23 +1169,48 @@ async function loadPacientes() {
     const data = await sbGet(`turnos?profesional_id=eq.${PROFESIONAL_ID}&select=paciente_nombre,paciente_tel,motivo&order=created_at.desc`);
     if (!Array.isArray(data) || data.length === 0) {
       list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👤</div><p>Sin pacientes registrados aún</p></div>';
+      PACIENTES_DATA = [];
       return;
     }
     // Deduplicar por nombre
     const unicos = {};
-    data.forEach(p => { if (!unicos[p.paciente_nombre]) { unicos[p.paciente_nombre] = { ...p, visitas: 1 }; } else { unicos[p.paciente_nombre].visitas++; } });
-    list.innerHTML = Object.values(unicos).map(p => `
-      <div class="paciente-card">
-        <div class="pac-avatar">👤</div>
-        <div>
-          <div class="pac-name">${p.paciente_nombre}</div>
-          <div class="pac-info">${p.visitas} visita${p.visitas > 1 ? 's' : ''} · ${p.motivo || ''}</div>
-        </div>
-        <a class="pac-wpp" href="https://wa.me/${p.paciente_tel.replace(/\D/g,'')}" target="_blank">💬</a>
-      </div>`).join('');
+    data.forEach(p => {
+      if (!unicos[p.paciente_nombre]) { unicos[p.paciente_nombre] = { ...p, visitas: 1 }; }
+      else { unicos[p.paciente_nombre].visitas++; }
+    });
+    PACIENTES_DATA = Object.values(unicos);
+    renderPacientes(PACIENTES_DATA);
   } catch(e) {
     list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error cargando pacientes</p></div>';
   }
+}
+ 
+function renderPacientes(lista) {
+  const list = document.getElementById('pacientes-list');
+  const empty = document.getElementById('pacientes-empty');
+  if (!lista || lista.length === 0) {
+    list.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  list.innerHTML = lista.map(p => `
+    <div class="paciente-card">
+      <div class="pac-avatar">👤</div>
+      <div style="flex:1">
+        <div class="pac-name">${p.paciente_nombre}</div>
+        <div class="pac-info">${p.visitas} visita${p.visitas > 1 ? 's' : ''} · ${p.motivo || ''}</div>
+        <div class="pac-info" style="margin-top:2px;font-family:'DM Mono',monospace;font-size:11px">${p.paciente_tel}</div>
+      </div>
+      <a class="pac-wpp" href="https://wa.me/${p.paciente_tel.replace(/\D/g,'')}" target="_blank">💬</a>
+    </div>`).join('');
+}
+ 
+function filtrarPacientes(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) { renderPacientes(PACIENTES_DATA); return; }
+  const filtrados = PACIENTES_DATA.filter(p => p.paciente_nombre.toLowerCase().includes(q));
+  renderPacientes(filtrados);
 }
  
 function switchPanelTab(id, btn) {
@@ -1225,10 +1289,167 @@ async function guardarConfig() {
   btn.textContent = 'Guardar cambios';
 }
  
+ 
+// ══════════════════════════════════════
+// NUEVO TURNO DESDE PANEL
+// ══════════════════════════════════════
+function abrirNuevoTurno() {
+  // Set fecha label
+  const monday = getMondayOfWeek(weekOffset);
+  const d = new Date(monday); d.setDate(d.getDate() + activeDayOffset);
+  const label = d.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
+  document.getElementById('modal-fecha-label').textContent =
+    'Turno para: ' + label.charAt(0).toUpperCase() + label.slice(1);
+ 
+  // Limpiar form
+  document.getElementById('nt-nombre').value = '';
+  document.getElementById('nt-tel').value = '';
+  document.getElementById('nt-hora').value = '16:00';
+  document.getElementById('nt-duracion').value = '30';
+  document.getElementById('nt-motivo').value = '';
+ 
+  document.getElementById('modal-nuevo-turno').classList.add('open');
+}
+ 
+function cerrarNuevoTurno() {
+  document.getElementById('modal-nuevo-turno').classList.remove('open');
+}
+ 
+// Cerrar tocando el overlay - se registra cuando el DOM esta listo
+document.addEventListener('DOMContentLoaded', function() {
+  var overlay = document.getElementById('modal-nuevo-turno');
+  if (overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) cerrarNuevoTurno();
+    });
+  }
+});
+ 
+async function guardarNuevoTurno() {
+  const nombre = document.getElementById('nt-nombre').value.trim();
+  const tel    = document.getElementById('nt-tel').value.trim();
+  const hora   = document.getElementById('nt-hora').value;
+  const dur    = parseInt(document.getElementById('nt-duracion').value);
+  const motivo = document.getElementById('nt-motivo').value || 'Sin especificar';
+ 
+  if (!nombre || !tel || !hora) {
+    if (!nombre) document.getElementById('nt-nombre').style.borderColor = 'var(--blue)';
+    if (!tel)    document.getElementById('nt-tel').style.borderColor    = 'var(--blue)';
+    showToast('Completá nombre, teléfono y horario.');
+    return;
+  }
+ 
+  const btn = document.getElementById('btn-guardar-turno');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Guardando...';
+ 
+  try {
+    const monday = getMondayOfWeek(weekOffset);
+    const d = new Date(monday); d.setDate(d.getDate() + activeDayOffset);
+    const fechaStr = d.toISOString().split('T')[0];
+ 
+    const result = await sbPost('turnos', {
+      profesional_id:  PROFESIONAL_ID,
+      paciente_nombre: nombre,
+      paciente_tel:    tel,
+      paciente_email:  null,
+      motivo,
+      fecha:    fechaStr,
+      hora:     hora + ':00',
+      duracion: dur,
+      estado:   'confirmado'   // turno del médico ya confirmado
+    });
+ 
+    if (result && result[0] && result[0].id) {
+      cerrarNuevoTurno();
+      await renderPanelDay();
+      await loadPanelStats();
+      showToast('✓ Turno guardado correctamente', 'info');
+ 
+      // Abrir WhatsApp
+      var telLimpio = tel.replace(/[^0-9]/g, '');
+      var waMsg = 'Hola ' + nombre + ', su turno con el Dr. Gonzalez Gomez esta confirmado. Horario: ' + hora + ' hs (' + dur + ' min). Clinica CEMIJ, Jujuy 173, Tucuman. Le recordaremos 24hs antes.';
+      var waUrl = 'https://wa.me/' + telLimpio + '?text=' + encodeURIComponent(waMsg);
+      setTimeout(function() {
+        if (confirm('Enviar confirmacion por WhatsApp al paciente?')) {
+          window.open(waUrl, '_blank');
+        }
+      }, 600);
+ 
+    } else {
+      throw new Error('Error al guardar');
+    }
+  } catch(e) {
+    showToast('Error al guardar el turno. Intentá de nuevo.');
+    console.error(e);
+  }
+ 
+  btn.disabled = false;
+  btn.textContent = 'Guardar turno →';
+}
+ 
 // ══ INIT ══
-renderCalendar();
-init();
+document.addEventListener('DOMContentLoaded', () => {
+  renderCalendar();
+  init();
+});
 </script>
+ 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registrado:', reg.scope))
+      .catch(err => console.log('SW error:', err));
+  });
+}
+</script>
+ 
+<!-- ── MODAL NUEVO TURNO ── -->
+<div class="modal-overlay" id="modal-nuevo-turno">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="cerrarNuevoTurno()">✕</button>
+    <h3 class="modal-title">Nuevo turno</h3>
+    <p class="modal-sub" id="modal-fecha-label">Cargá los datos del paciente</p>
+ 
+    <div class="form-group">
+      <label class="form-label">Nombre del paciente</label>
+      <input class="form-input" type="text" id="nt-nombre" placeholder="Ej: Ana García">
+    </div>
+    <div class="form-group">
+      <label class="form-label">WhatsApp</label>
+      <input class="form-input" type="tel" id="nt-tel" placeholder="+54 381 000 0000">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Horario</label>
+      <input class="form-input" type="time" id="nt-hora" value="16:00">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Duración</label>
+      <select class="form-select" id="nt-duracion">
+        <option value="30">30 minutos</option>
+        <option value="45">45 minutos</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Motivo de consulta</label>
+      <select class="form-select" id="nt-motivo">
+        <option value="">Seleccioná el motivo...</option>
+        <option>Consulta inicial / Evaluación</option>
+        <option>Cirugía programada</option>
+        <option>Control postoperatorio</option>
+        <option>Urgencia / Dolor</option>
+        <option>Extracción compleja</option>
+        <option>Implante</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <button class="btn-confirm" id="btn-guardar-turno" onclick="guardarNuevoTurno()">
+      Guardar turno →
+    </button>
+  </div>
+</div>
 </body>
 </html>
  
