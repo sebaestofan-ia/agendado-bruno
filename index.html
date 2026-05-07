@@ -93,14 +93,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
 .cal-month-label{font-family:'Lora',serif;font-size:17px;color:var(--text);}
 .cal-nav{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--pearl);color:var(--text-mid);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
 .cal-nav:hover{background:var(--blue);color:var(--white);border-color:var(--blue);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px 10px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding:12px 10px;}
 .cal-day-name{text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim);padding:4px 0 8px;height:30px;}
-.cal-day{height:38px;width:38px;margin:0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text);}
-.cal-day.empty,.cal-day.past{color:var(--text-dim);pointer-events:none;}
-.cal-day.available{background:var(--teal-pale);color:var(--teal);font-weight:700;}
-.cal-day.available:hover{background:var(--teal);color:var(--white);}
-.cal-day.available.selected{background:var(--teal);color:var(--white);box-shadow:0 0 0 3px rgba(13,148,136,.2);}
-.cal-day.today:not(.available){border:2px solid var(--blue);color:var(--blue);font-weight:700;}
+.cal-day{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;border-radius:10px;border:1.5px solid var(--border);
+  background:var(--white);font-size:17px;font-weight:600;
+  cursor:pointer;transition:all .2s;color:var(--text);
+  min-height:48px;width:100%;padding:4px 2px;
+  box-shadow:var(--shadow-xs);
+}
+.cal-day.empty{background:transparent;border-color:transparent;box-shadow:none;pointer-events:none;} .cal-day.past{color:var(--text-dim);pointer-events:none;background:var(--snow);border-color:var(--border);}
+.cal-day.available{background:var(--teal-pale);color:var(--teal);font-weight:700;border-color:rgba(13,148,136,.25);}
+.cal-day.available:hover{background:var(--teal);color:var(--white);border-color:var(--teal);transform:translateY(-1px);box-shadow:0 4px 12px rgba(13,148,136,.2);}
+.cal-day.available.selected{background:var(--teal);color:var(--white);border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.2);}
+.cal-day.today:not(.available){border:1.5px solid var(--blue);color:var(--blue);font-weight:700;background:var(--blue-pale);}
 .cal-day.no-slots{color:var(--border2);pointer-events:none;}
 .cal-legend{display:flex;gap:14px;padding:12px 18px 14px;border-top:1px solid var(--border);}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-mid);}
@@ -804,8 +811,11 @@ function switchView() {
   document.getElementById('view-doctor').classList.toggle('active', inDoctor);
   document.getElementById('switch-icon').textContent = inDoctor ? '👤' : '🩺';
   document.getElementById('switch-label').textContent = inDoctor ? 'Vista paciente' : 'Panel médico';
-  // Ocultar botón switch cuando está en el panel (tiene el botón integrado en el header)
   document.getElementById('switch-outer').style.display = inDoctor ? 'none' : 'block';
+  // Si tiene sesión guardada, activar panel directamente
+  if (inDoctor && checkSession()) {
+    activarPanel();
+  }
 }
  
 // ══════════════════════════════════════
@@ -848,7 +858,15 @@ function renderCalendar() {
     else el.classList.add('no-slots');
     if (isToday) el.classList.add('today');
     if (selDate && selDate.getDate() === d && selDate.getMonth() === curMonth && selDate.getFullYear() === curYear) el.classList.add('selected');
-    el.textContent = d;
+    // Add today dot
+    if (isToday && !isAvail) {
+      const dot = document.createElement('span');
+      dot.style.cssText = 'width:5px;height:5px;border-radius:50%;background:var(--blue);display:block;margin-top:1px;';
+      el.innerHTML = d;
+      el.appendChild(dot);
+    } else {
+      el.textContent = d;
+    }
     if (isAvail) el.onclick = () => selectDay(d);
     grid.appendChild(el);
   }
@@ -1014,21 +1032,29 @@ function resetFlow() {
 // ══════════════════════════════════════
 // PANEL MÉDICO
 // ══════════════════════════════════════
+function activarPanel() {
+  document.getElementById('panel-login').style.display = 'none';
+  document.getElementById('panel-inner').style.display = 'block';
+  panelYear = today.getFullYear();
+  panelMonth = today.getMonth();
+  panelSelDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  renderPanelMonthGrid();
+  loadTurnosMes_panel();
+  renderPanelDay();
+  loadPacientes();
+  loadPanelStats();
+}
+ 
 function doLogin() {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
   if (u === 'dr.gonzalez' && p === 'cemij2025') {
     document.getElementById('login-error').style.display = 'none';
-    document.getElementById('panel-login').style.display = 'none';
-    document.getElementById('panel-inner').style.display = 'block';
-    panelYear = today.getFullYear();
-    panelMonth = today.getMonth();
-    panelSelDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    renderPanelMonthGrid();
-    loadTurnosMes_panel();
-    renderPanelDay();
-    loadPacientes();
-    loadPanelStats();
+    // Guardar sesión por 30 días
+    const expiry = new Date();
+    expiry.setDate(expiry.getDate() + 30);
+    localStorage.setItem('agendado_session', JSON.stringify({ user: u, expiry: expiry.toISOString() }));
+    activarPanel();
   } else {
     document.getElementById('login-error').style.display = 'block';
     document.getElementById('login-pass').value = '';
@@ -1036,10 +1062,25 @@ function doLogin() {
 }
  
 function doLogout() {
+  localStorage.removeItem('agendado_session');
   document.getElementById('panel-inner').style.display = 'none';
   document.getElementById('panel-login').style.display = 'flex';
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
+}
+ 
+function checkSession() {
+  try {
+    const raw = localStorage.getItem('agendado_session');
+    if (!raw) return false;
+    const session = JSON.parse(raw);
+    if (new Date(session.expiry) > new Date()) {
+      return true;
+    } else {
+      localStorage.removeItem('agendado_session');
+      return false;
+    }
+  } catch(e) { return false; }
 }
  
 async function loadPanelStats() {
@@ -1472,6 +1513,13 @@ async function guardarNuevoTurno() {
 document.addEventListener('DOMContentLoaded', () => {
   renderCalendar();
   init();
+  // Auto-login si tiene sesión guardada
+  if (checkSession()) {
+    // Si está en vista doctor, activar panel directamente
+    if (document.getElementById('view-doctor').classList.contains('active')) {
+      activarPanel();
+    }
+  }
 });
 </script>
  
