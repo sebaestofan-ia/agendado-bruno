@@ -552,19 +552,35 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
     </div>
  
     <div id="ptab-agenda" class="panel-section active">
-      <!-- Vista semanal -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-family:Lora,serif;font-size:16px;color:var(--text)" id="week-label"></span>
+      <!-- Header mes -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="day-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <span style="font-family:'Lora',serif;font-size:17px;color:var(--text);font-weight:600" id="panel-month-label"></span>
+          <button class="day-nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
         <div style="display:flex;gap:6px">
-          <button class="day-nav-btn" onclick="changeWeek(-1)">‹</button>
-          <button class="day-nav-btn" onclick="changeWeek(0)" style="font-size:10px;font-weight:700;padding:0 8px;border-radius:8px;width:auto">Hoy</button>
-          <button class="day-nav-btn" onclick="changeWeek(1)">›</button>
+          <button class="day-nav-btn" onclick="goToToday()" style="font-size:10px;font-weight:700;padding:0 10px;border-radius:8px;width:auto;white-space:nowrap">Hoy</button>
           <button onclick="abrirNuevoTurno()" style="padding:0 12px;height:32px;background:var(--blue);color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;white-space:nowrap;">+ Nuevo turno</button>
         </div>
       </div>
-      <!-- Tabs de días -->
-      <div id="week-day-tabs" style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px;padding-bottom:2px"></div>
-      <!-- Lista de turnos del día -->
+ 
+      <!-- Nombres de días -->
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px">
+        <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text-dim);padding:4px 0">LUN</div>
+        <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text-dim);padding:4px 0">MAR</div>
+        <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text-dim);padding:4px 0">MIÉ</div>
+        <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text-dim);padding:4px 0">JUE</div>
+        <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text-dim);padding:4px 0">VIE</div>
+        <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text-xdim);padding:4px 0">SÁB</div>
+        <div style="text-align:center;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text-xdim);padding:4px 0">DOM</div>
+      </div>
+ 
+      <!-- Grilla de días del mes -->
+      <div id="panel-month-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px"></div>
+ 
+      <!-- Lista de turnos del día seleccionado -->
+      <div id="panel-selected-day-label" style="display:none;font-family:'Lora',serif;font-size:16px;color:var(--text);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)"></div>
       <div id="agenda-list"></div>
     </div>
  
@@ -1005,8 +1021,11 @@ function doLogin() {
     document.getElementById('login-error').style.display = 'none';
     document.getElementById('panel-login').style.display = 'none';
     document.getElementById('panel-inner').style.display = 'block';
-    weekOffset = 0; activeDayOffset = 0;
-    renderWeekTabs();
+    panelYear = today.getFullYear();
+    panelMonth = today.getMonth();
+    panelSelDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    renderPanelMonthGrid();
+    loadTurnosMes_panel();
     renderPanelDay();
     loadPacientes();
     loadPanelStats();
@@ -1049,66 +1068,129 @@ async function loadPanelStats() {
   } catch(e) { console.error(e); }
 }
  
-// ══ VISTA SEMANAL ══
-let weekOffset = 0;      // semanas desde hoy
-let activeDayOffset = 0; // día seleccionado dentro de la semana
+// ══ VISTA MENSUAL PANEL ══
+let panelYear = today.getFullYear();
+let panelMonth = today.getMonth();
+let panelSelDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+let turnosPorDia = {};
  
-function getMondayOfWeek(offset) {
-  const d = new Date(today);
-  const dow = d.getDay() === 0 ? 7 : d.getDay();
-  d.setDate(d.getDate() - dow + 1 + offset * 7);
-  d.setHours(0,0,0,0);
-  return d;
+const panelMonthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+ 
+function changeMonth(dir) {
+  panelMonth += dir;
+  if (panelMonth < 0) { panelMonth = 11; panelYear--; }
+  if (panelMonth > 11) { panelMonth = 0; panelYear++; }
+  renderPanelMonthGrid();
+  loadTurnosMes_panel();
 }
  
-function changeWeek(dir) {
-  if (dir === 0) { weekOffset = 0; activeDayOffset = 0; }
-  else weekOffset += dir;
-  renderWeekTabs();
+function goToToday() {
+  panelYear = today.getFullYear();
+  panelMonth = today.getMonth();
+  panelSelDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  renderPanelMonthGrid();
+  loadTurnosMes_panel();
   renderPanelDay();
 }
  
-function renderWeekTabs() {
-  const monday = getMondayOfWeek(weekOffset);
-  const from = monday.toLocaleDateString('es-AR', { day:'numeric', month:'long' });
-  const fri = new Date(monday); fri.setDate(fri.getDate() + 4);
-  const to = fri.toLocaleDateString('es-AR', { day:'numeric', month:'long' });
-  document.getElementById('week-label').textContent = from + ' – ' + to;
+async function loadTurnosMes_panel() {
+  if (!PROFESIONAL_ID) return;
+  const from = new Date(panelYear, panelMonth, 1).toISOString().split('T')[0];
+  const to   = new Date(panelYear, panelMonth + 1, 0).toISOString().split('T')[0];
+  try {
+    const data = await sbGet('turnos?profesional_id=eq.' + PROFESIONAL_ID + '&fecha=gte.' + from + '&fecha=lte.' + to + '&estado=neq.cancelado&select=fecha');
+    turnosPorDia = {};
+    if (Array.isArray(data)) {
+      data.forEach(function(t) {
+        turnosPorDia[t.fecha] = (turnosPorDia[t.fecha] || 0) + 1;
+      });
+    }
+    renderPanelMonthGrid();
+  } catch(e) { console.warn('Error cargando mes:', e); }
+}
  
-  const tabs = document.getElementById('week-day-tabs');
-  tabs.innerHTML = '';
-  const dayLabels = ['Lun','Mar','Mié','Jue','Vie'];
-  const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+function renderPanelMonthGrid() {
+  var labelEl = document.getElementById('panel-month-label');
+  if (labelEl) labelEl.textContent = panelMonthNames[panelMonth] + ' ' + panelYear;
  
-  for (let i = 0; i < 5; i++) {
-    const d = new Date(monday); d.setDate(d.getDate() + i);
-    const isToday = d.toDateString() === today.toDateString();
-    const isSelected = (weekOffset * 7 + i) === activeDayOffset || 
-                       (weekOffset === 0 && i === activeDayOffset);
-    const dayNum = d.getDate();
-    const isPast = d < todayMid;
+  var grid = document.getElementById('panel-month-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
  
-    const btn = document.createElement('button');
-    btn.style.cssText = `flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:10px;border:1.5px solid ${isSelected ? 'var(--blue)' : 'var(--border)'};background:${isSelected ? 'var(--blue)' : 'var(--white)'};cursor:pointer;transition:all .2s;min-width:52px;`;
-    btn.innerHTML = `<span style="font-size:10px;font-weight:700;letter-spacing:.5px;color:${isSelected ? 'white' : isPast ? 'var(--text-dim)' : 'var(--text-mid)'};">${dayLabels[i]}</span><span style="font-family:Lora,serif;font-size:18px;font-weight:600;color:${isSelected ? 'white' : isToday ? 'var(--blue)' : isPast ? 'var(--text-dim)' : 'var(--text)'}">${dayNum}</span>${isToday ? `<span style="width:4px;height:4px;border-radius:50%;background:${isSelected ? 'white' : 'var(--teal)'}"></span>` : ''}`;
-    
-    const dayOff = i;
-    btn.onclick = () => {
-      activeDayOffset = dayOff;
-      renderWeekTabs();
-      renderPanelDay();
-    };
-    tabs.appendChild(btn);
+  var firstDay = new Date(panelYear, panelMonth, 1).getDay();
+  var startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  var daysInMonth = new Date(panelYear, panelMonth + 1, 0).getDate();
+  var todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+ 
+  for (var i = 0; i < startOffset; i++) {
+    var empty = document.createElement('div');
+    grid.appendChild(empty);
+  }
+ 
+  for (var d = 1; d <= daysInMonth; d++) {
+    (function(day) {
+      var dt = new Date(panelYear, panelMonth, day);
+      var dateStr = dt.toISOString().split('T')[0];
+      var isToday = dt.toDateString() === today.toDateString();
+      var isPast = dt < todayMid;
+      var isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+      var isSelected = panelSelDate && dt.toDateString() === panelSelDate.toDateString();
+      var count = turnosPorDia[dateStr] || 0;
+      var hasTurnos = count > 0;
+ 
+      var btn = document.createElement('button');
+      btn.type = 'button';
+ 
+      var bg = isSelected ? 'var(--blue)' : hasTurnos && !isPast ? 'var(--blue-pale)' : 'var(--white)';
+      var border = isSelected ? 'var(--blue)' : hasTurnos && !isPast ? 'rgba(26,79,138,.25)' : 'var(--border)';
+ 
+      btn.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;border-radius:10px;border:1.5px solid ' + border + ';background:' + bg + ';cursor:pointer;transition:all .2s;min-height:56px;width:100%';
+ 
+      // Number
+      var numEl = document.createElement('span');
+      numEl.style.cssText = 'font-family:Lora,serif;font-size:18px;font-weight:600;line-height:1;color:' + (isSelected ? 'white' : isToday ? 'var(--blue)' : isWeekend ? 'var(--text-xdim)' : isPast ? 'var(--text-dim)' : 'var(--text)');
+      numEl.textContent = day;
+      btn.appendChild(numEl);
+ 
+      // Today dot
+      if (isToday && !isSelected) {
+        var dot = document.createElement('span');
+        dot.style.cssText = 'width:5px;height:5px;border-radius:50%;background:var(--teal);';
+        btn.appendChild(dot);
+      }
+ 
+      // Turno badge
+      if (hasTurnos) {
+        var badge = document.createElement('span');
+        badge.style.cssText = 'font-size:9px;font-weight:700;border-radius:10px;padding:1px 5px;line-height:1.4;background:' + (isSelected ? 'rgba(255,255,255,.25)' : 'var(--blue)') + ';color:white';
+        badge.textContent = count + (count === 1 ? ' t.' : ' t.');
+        btn.appendChild(badge);
+      }
+ 
+      btn.onclick = function() {
+        panelSelDate = dt;
+        renderPanelMonthGrid();
+        renderPanelDay();
+      };
+ 
+      grid.appendChild(btn);
+    })(d);
   }
 }
  
-// Keep legacy changeDay for compatibility
+// Compatibility
 let panelDayOffset = 0;
-function changeDay(dir) { panelDayOffset += dir; }
+let weekOffset = 0;
+let activeDayOffset = 0;
+function getMondayOfWeek(offset) {
+  var d = new Date(today);
+  var dow = d.getDay() === 0 ? 7 : d.getDay();
+  d.setDate(d.getDate() - dow + 1 + offset * 7);
+  return d;
+}
  
 async function renderPanelDay() {
-  const monday = getMondayOfWeek(weekOffset);
-  const d = new Date(monday); d.setDate(d.getDate() + activeDayOffset);
+  const d = panelSelDate || new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const label = d.toDateString() === today.toDateString()
     ? 'Hoy · ' + d.toLocaleDateString('es-AR', { day:'numeric', month:'long' })
     : d.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
@@ -1295,8 +1377,7 @@ async function guardarConfig() {
 // ══════════════════════════════════════
 function abrirNuevoTurno() {
   // Set fecha label
-  const monday = getMondayOfWeek(weekOffset);
-  const d = new Date(monday); d.setDate(d.getDate() + activeDayOffset);
+  const d = panelSelDate || new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const label = d.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
   document.getElementById('modal-fecha-label').textContent =
     'Turno para: ' + label.charAt(0).toUpperCase() + label.slice(1);
@@ -1344,8 +1425,7 @@ async function guardarNuevoTurno() {
   btn.innerHTML = '<span class="spinner"></span>Guardando...';
  
   try {
-    const monday = getMondayOfWeek(weekOffset);
-    const d = new Date(monday); d.setDate(d.getDate() + activeDayOffset);
+    const d = panelSelDate || new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const fechaStr = d.toISOString().split('T')[0];
  
     const result = await sbPost('turnos', {
