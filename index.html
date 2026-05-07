@@ -338,7 +338,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <div class="hero-badge">🏥 Cirugía Dentomaxilar · Maxilofacial</div>
     </div>
     <h1 class="hero-name">Dr. Bruno González Gómez</h1>
-    <div class="hero-spec">
+    <div class="hero-spec" id="hero-spec-chips">
       <span class="spec-chip">Cirugía Dentomaxilar</span>
       <span class="spec-chip">Maxilofacial</span>
       <span class="spec-chip">UNT · 15 años</span>
@@ -628,31 +628,54 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--snow);color:var
       <div class="config-section">
         <span class="config-label">Datos del profesional</span>
         <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow-sm)">
+ 
           <div class="form-group">
-            <label class="form-label">Nombre completo</label>
+            <label class="form-label">Nombre completo <span style="color:var(--rose)">*</span></label>
             <input class="form-input" id="cfg-nombre" type="text" placeholder="Dr. Bruno González Gómez">
           </div>
+ 
           <div class="form-group">
-            <label class="form-label">Especialidad</label>
-            <input class="form-input" id="cfg-especialidad" type="text" placeholder="Cirugía Dentomaxilar / Maxilofacial">
+            <label class="form-label">Título <span style="color:var(--rose)">*</span></label>
+            <input class="form-input" id="cfg-titulo" type="text" placeholder="Odontólogo / Médico / Lic. en...">
           </div>
+ 
           <div class="form-group">
-            <label class="form-label">Consultorio</label>
+            <label class="form-label">Especialidad <span style="color:var(--rose)">*</span></label>
+            <input class="form-input" id="cfg-especialidad" type="text" placeholder="Cirugía Dentomaxilar">
+          </div>
+ 
+          <div class="form-group">
+            <label class="form-label">Matrícula <span style="color:var(--text-dim);font-style:italic;font-weight:400">(opcional)</span></label>
+            <input class="form-input" id="cfg-matricula" type="text" placeholder="MP 1234">
+          </div>
+ 
+          <div class="form-group">
+            <label class="form-label">Consultorio / Estudio <span style="color:var(--text-dim);font-style:italic;font-weight:400">(opcional)</span></label>
             <input class="form-input" id="cfg-consultorio" type="text" placeholder="Clínica CEMIJ">
           </div>
+ 
           <div class="form-group">
-            <label class="form-label">Dirección</label>
+            <label class="form-label">Dirección <span style="color:var(--rose)">*</span></label>
             <input class="form-input" id="cfg-direccion" type="text" placeholder="Jujuy 173, Tucumán">
           </div>
+ 
           <div class="form-group">
-            <label class="form-label">WhatsApp / Teléfono</label>
+            <label class="form-label">WhatsApp / Teléfono <span style="color:var(--rose)">*</span></label>
             <input class="form-input" id="cfg-telefono" type="tel" placeholder="+543815293000">
           </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label">Email</label>
+ 
+          <div class="form-group">
+            <label class="form-label">Email <span style="color:var(--rose)">*</span></label>
             <input class="form-input" id="cfg-email" type="email" placeholder="brusaje2213@hotmail.com">
           </div>
+ 
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Otro <span style="color:var(--text-dim);font-style:italic;font-weight:400">(opcional)</span></label>
+            <input class="form-input" id="cfg-otro" type="text" placeholder="UNT · 15 años de experiencia...">
+          </div>
+ 
         </div>
+      </div>      </div>
       </div>
  
       <!-- HORARIOS EDITABLES -->
@@ -1357,11 +1380,14 @@ async function loadConfig() {
     const p = data[0];
     const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
     setVal('cfg-nombre',       p.nombre);
+    setVal('cfg-titulo',       p.titulo);
     setVal('cfg-especialidad', p.especialidad);
+    setVal('cfg-matricula',    p.matricula);
     setVal('cfg-consultorio',  p.consultorio);
     setVal('cfg-direccion',    p.direccion);
     setVal('cfg-telefono',     p.telefono);
     setVal('cfg-email',        p.email);
+    setVal('cfg-otro',         p.otro);
     if (p.horario_inicio) setVal('cfg-hora-inicio', p.horario_inicio.substring(0,5));
     if (p.horario_fin)    setVal('cfg-hora-fin',    p.horario_fin.substring(0,5));
     if (p.dias_atencion && Array.isArray(p.dias_atencion)) {
@@ -1385,9 +1411,13 @@ async function guardarConfig() {
     btn.disabled = false; btn.textContent = 'Guardar cambios'; return;
   }
  
+  const titulo = document.getElementById('cfg-titulo') ? document.getElementById('cfg-titulo').value.trim() : '';
+  const especialidad = document.getElementById('cfg-especialidad').value.trim();
+  const matricula = document.getElementById('cfg-matricula') ? document.getElementById('cfg-matricula').value.trim() : '';
+  const otro = document.getElementById('cfg-otro') ? document.getElementById('cfg-otro').value.trim() : '';
+ 
   const payload = {
-    nombre,
-    especialidad:  document.getElementById('cfg-especialidad').value.trim(),
+    nombre, titulo, especialidad, matricula, otro,
     consultorio:   document.getElementById('cfg-consultorio').value.trim(),
     direccion:     document.getElementById('cfg-direccion').value.trim(),
     telefono:      document.getElementById('cfg-telefono').value.trim(),
@@ -1400,6 +1430,9 @@ async function guardarConfig() {
   try {
     await sbPatch(`profesionales?id=eq.${PROFESIONAL_ID}`, payload);
     showToast('✓ Cambios guardados correctamente', 'info');
+    actualizarChipsHero(especialidad, matricula, payload.consultorio, otro);
+    const heroName = document.querySelector('.hero-name');
+    if (heroName) heroName.textContent = nombre;
   } catch(e) {
     showToast('Error al guardar. Intentá de nuevo.');
     console.error(e);
